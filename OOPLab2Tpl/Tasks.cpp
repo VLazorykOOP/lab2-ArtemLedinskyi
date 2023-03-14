@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <bitset>
 using namespace std;
 #include "Tasks.h"
 #include "Examples.h"
@@ -13,8 +14,7 @@ void MenuTask()
     cout << "    6.  Exit \n";
 }
 void task1() {
-    
-        setlocale(LC_CTYPE, "ukr");
+    setlocale(LC_CTYPE, "ukr");
         int a, b, c, d, x, y;
         cout << "Enter a:";
         cin >> a;
@@ -34,51 +34,60 @@ void task1() {
 
 void task2()
 {
-    cout << " Data encryption using bitwise operations  \n";
-	int i, n, j;
-	char Text[4][16];
-	char Result[4][16];
-	char g[25];
-	for (i = 0; i < 4; i++) {
-		cout << "Enter Text :";
-		cin >> g;
-		for (j = 0; j < 16; j++) {
-			if (g[i] == NULL) {
-				g[j] = ' ';
-			}
-			Text[i][j] = g[j];
-		}
-	}
-	unsigned short z, x, c, sf, pa;
-	for (i = 0; i < 4; i++) {
-		for (j = 0; j < 16; j++) {
-			z = i;
-			x = j << 2;
-			z |= x;
-			x = Text[i][j];
-			x <<= 6;
-			z |= x;
-			c = 0;
-			sf = 1;
-			for (pa = 0; pa < 15; pa++) {
-				if (z & sf) {
-					c = 1;
-				}
-				sf <<= 1;
-			}
-			x = 1 << 15;
-			if (c == 1) {
-				z |= x;
-			}
-			Result[i][j] = z;
-		}
-	}
-	for (i = 0; i < 4; i++) {
-		for (j = 0; j < 16; j++) {
-
-		}
-	}
-	return;
+    char Text[4][16];
+    char idk[100];
+    unsigned short Res[4][16];
+    unsigned short i, j, z, x, c, sf, ez;
+    for (i = 0; i < 4; i++)
+    {
+        cout << "Enter Text :" << endl;
+        cin >> idk;
+        for (j = 0; j < 16; j++)
+        {
+            if (idk[j] == NULL)//Доповнюємо рядок пробілом
+            {
+                idk[j] = ' ';
+            }
+            Text[i][j] = idk[j];//скопіювали символ з одного масива до іншого.
+        }
+    }
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 16; j++)
+        {
+            z = i;;//додавання номера рядка
+            x = j << 2;
+            z |= x;
+            x = Text[i][j];
+            x <<= 6;//зсув на 6 бітів, виділені під номер символа
+            z |= x;
+            c = 0;
+            ez = 1;
+            for (sf = 0; sf < 15; sf++)//15 біт - біт парності коду букв
+            {
+                if (z & ez)
+                {
+                    c = 1;
+                }
+                ez <<= 1;// зсув на 2 бітів, виділені під номер символа
+            }
+            x = 1 << 15;//зберігаємо біт парності
+            if (c == 1)
+            {
+                z |= x;
+            }
+            Res[i][j] = z;//збереження в зміну,яка зберігатиме відповідь 
+        }
+    }
+    for (i = 0; i < 4; i++)//Вивід зашифрованого тексту
+    {
+        for (j = 0; j < 16; j++)
+        {
+            bitset<16> qwe(Res[i][j]);
+            cout << qwe << endl;
+        }
+    }
+    return;
 }
 
 
