@@ -113,7 +113,7 @@ void task2()
         for (j = 0; j < 16; j++)
         {
             z = i;// номера рядка букви.
-            x = j << 2;//позиція букви рядку .
+            x = j << 2;//позиція букви рядку.
             z |= x;
             x = Text[i][j];
             x <<= 6;//ASCII - код букви.
@@ -145,7 +145,6 @@ void task2()
             WriteBinTextFileforshort(Res, "Writetask2.bin");
         }
     }
-    
     return;
 }
 
@@ -177,7 +176,72 @@ void task3() {
     return;
 }
 
+void Decryption() {
 
+        unsigned short Res[4][16];
+        char Text[4][16];
+        char idk[100];
+        unsigned short i, j, z, x, c, sf, ez;
+
+        // Отримання зашифрованого тексту
+        for (i = 0; i < 4; i++)
+        {
+            for (j = 0; j < 16; j++)
+            {
+                cout << "Enter encrypted code at row " << i << " column " << j << ":" << endl;
+                cin >> Res[i][j];
+            }
+        }
+
+        // Дешифрування тексту
+        for (i = 0; i < 4; i++)
+        {
+            for (j = 0; j < 16; j++)
+            {
+                z = Res[i][j];
+                c = 0;
+                ez = 1;
+                for (sf = 0; sf < 15; sf++)
+                {
+                    if (z & ez)
+                    {
+                        c = 1;
+                    }
+                    ez <<= 1;
+                }
+                x = 1 << 14;
+                if (c == 1)
+                {
+                    z &= ~x;
+                }
+
+                z >>= 6; // відкидаємо 6 біт, що кодують ASCII-символ
+
+                // перетворюємо код в ASCII-символ
+                char ch = static_cast<char>(z);
+                if (ch == ' ')
+                {
+                    ch = '\0'; // замінюємо пробіл на нульовий символ
+                }
+                Text[i][j] = ch;
+            }
+        }
+
+        // Вивід дешифрованого тексту
+        cout << "Decrypted Text:" << endl;
+        for (i = 0; i < 4; i++)
+        {
+            for (j = 0; j < 16; j++)
+            {
+                cout << Text[i][j];
+            }
+            cout << endl;
+        }
+
+        return;
+    
+
+}
 
     
 
