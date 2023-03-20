@@ -33,7 +33,7 @@ int main()
         ch = cin.get();
     } while (ch != '6');
     */
-    cout << "Choose Task which one do you want to watch :";
+    MenuTask();
     int c;
     cin >> c;
     if (c == 1) {
@@ -42,6 +42,10 @@ int main()
     else if (c == 2) {
         task2();
     }
+    else if (c == 3) {
+        task3();
+    }
+    
     return 0;
 }
 
