@@ -211,7 +211,6 @@ void task4() {
             cout << ZXC[q][w];// Вивід . 
         }
     }
-    
     return;
 }
 
