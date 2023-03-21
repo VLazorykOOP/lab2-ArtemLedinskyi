@@ -43,6 +43,9 @@ int main()
         task2();
     }
     else if (c == 3) {
+        task4();
+    }
+    else if (c == 4) {
         task3();
     }
     

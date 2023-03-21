@@ -12,8 +12,9 @@ void MenuTask()
     cout << "     Меню завдань   \n";
     cout << "    1.  Розв'язання прикладу за допомогою зсуву  \n";
     cout << "    2.  Шифрування тексту за допомогою двiйкових операцiй \n";
-    cout << "    3.  Додаткове завдання 4 \n";
-    cout << "    4.  Exit \n";
+    cout << "    3.  Розшифрування зашифрованого тексту \n";
+    cout << "    4.  Додаткове завдання 4 \n";
+    cout << "    5.  Exit \n";
 }
 
 void InputFor3task(int a) {
@@ -31,20 +32,20 @@ void WriteBinTextFileforshort(unsigned short QWE[4][16], const char* fileName) {
     Pew.close();
 
 }
-int ConsoleInputText(char Text[4][16], char Save[100], const char* fileName)
+int ConsoleInputText(unsigned char Text[4][16], const char* fileName)
 {
-    int i, j;
-    for (i = 0; i < 4; i++)
-    {
-        cout << "Enter Text :" << endl;
-        cin >>Save;
-        for (j = 0; j < 16; j++)
-        {
-            if (Save[j] == NULL)//Доповнюємо рядок пробілом
-            {
-                Save[j] = ' ';
+    int i, j, k=0;
+    cout << "input text: " << '\n';
+    for (i = 0; i < 4; i++) {
+        cin.getline(Text[i], 16);
+    }
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 16; j++) {
+            if (Text[i][j] == '\0') {
+                for (int k = j; k < 16; k++) {
+                    Text[i][k] = ' ';
+                }
             }
-            Text[i][j] = Save[j];//скопіювали символ з одного масива до іншого.
         }
     }
     return 1;
@@ -77,6 +78,18 @@ void  ReadArrayTextFileForChar(char A[4][16],const char* fileName)
         }
     }
 }
+void ReadBinFile(unsigned char QWE[4][16], const char* fileName) {
+    ifstream Pew("binary.dat", ios::in | ios::binary);
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 16; j++)
+        {
+            Pew.read((char*)&QWE[i][j], sizeof(unsigned short));
+        }
+    }
+    Pew.close();
+    return;
+}
 void task1() {
     setlocale(LC_CTYPE, "ukr");
       int a, b, c, d, x, y;
@@ -103,11 +116,10 @@ void task1() {
 }
 void task2()
 { 
-    char Text[4][16];
-    char idk[100];
+    unsigned char Text[4][16];
     unsigned short Res[4][16];
     unsigned short i, j, z, x, c, sf, ez;
-    ConsoleInputText(Text,idk, "Textinputtask.txt");
+    ConsoleInputText(Text[4][16], "Textinputtask.txt");
     for (i = 0; i < 4; i++)
     {
         for (j = 0; j < 16; j++)
@@ -176,71 +188,31 @@ void task3() {
     return;
 }
 
-void Decryption() {
-
-        unsigned short Res[4][16];
-        char Text[4][16];
-        char idk[100];
-        unsigned short i, j, z, x, c, sf, ez;
-
-        // Отримання зашифрованого тексту
-        for (i = 0; i < 4; i++)
-        {
-            for (j = 0; j < 16; j++)
-            {
-                cout << "Enter encrypted code at row " << i << " column " << j << ":" << endl;
-                cin >> Res[i][j];
-            }
+void task4() {
+    int i, j;
+    unsigned char ZXC[4][16];
+    unsigned short q, w, e, ASCII;
+    ReadBinFile(ZXC, "Writetask2.bin");
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 16; j++) {
+            q |= ZXC[i][j] << 14;//Зсув для занулення всіх значень,окрім зашифрованого номеру рядка .
+            q = q >> 14;//Зсуваємо вправо,щоб повернути значення рядка в початок .
+            w |= ZXC[i][j] << 10;//Зсуваємо в ліво,щоб занулити всі значення,крім зашифрованної позиції символа в рядку.
+            w = w >> 12;//Зсуваємо вправо,щоб змістити на початок .
+            e = ZXC[i][j]<<2;//Зсуваємо вліво,щоб занулити все,окрім ASCII-коду .
+            e = e>>8;//Зсуваємо вправо,щоб зміститись на початок .
+            ASCII |= e;//Надаємо змінній значення ASCII-коду .
+            ZXC[q][w]= static_cast<char>(ASCII);//Перетворємо з двійкового запису в літери .
         }
-
-        // Дешифрування тексту
-        for (i = 0; i < 4; i++)
-        {
-            for (j = 0; j < 16; j++)
-            {
-                z = Res[i][j];
-                c = 0;
-                ez = 1;
-                for (sf = 0; sf < 15; sf++)
-                {
-                    if (z & ez)
-                    {
-                        c = 1;
-                    }
-                    ez <<= 1;
-                }
-                x = 1 << 14;
-                if (c == 1)
-                {
-                    z &= ~x;
-                }
-
-                z >>= 6; // відкидаємо 6 біт, що кодують ASCII-символ
-
-                // перетворюємо код в ASCII-символ
-                char ch = static_cast<char>(z);
-                if (ch == ' ')
-                {
-                    ch = '\0'; // замінюємо пробіл на нульовий символ
-                }
-                Text[i][j] = ch;
-            }
+    }
+    for (i = 0; i < 4; i++) {
+        cout << endl;
+        for (j = 0; j < 16; j++) {
+            cout << ZXC[q][w];// Вивід . 
         }
-
-        // Вивід дешифрованого тексту
-        cout << "Decrypted Text:" << endl;
-        for (i = 0; i < 4; i++)
-        {
-            for (j = 0; j < 16; j++)
-            {
-                cout << Text[i][j];
-            }
-            cout << endl;
-        }
-
-        return;
+    }
     
-
+    return;
 }
 
     
