@@ -4,6 +4,7 @@
 #include <ios>
 #include "Tasks.h"
 #include "Examples.h"
+#include<string.h>
 using namespace std;
 
 void MenuTask()
@@ -32,9 +33,9 @@ void WriteBinTextFileforshort(unsigned short QWE[4][16], const char* fileName) {
     Pew.close();
 
 }
-int ConsoleInputText(unsigned char Text[4][16], const char* fileName)
+int ConsoleInputText( char Text[4][16], const char* fileName)
 {
-    int i, j, k=0;
+    int i, j;
     cout << "input text: " << '\n';
     for (i = 0; i < 4; i++) {
         cin.getline(Text[i], 16);
@@ -78,13 +79,13 @@ void  ReadArrayTextFileForChar(char A[4][16],const char* fileName)
         }
     }
 }
-void ReadBinFile(unsigned char QWE[4][16], const char* fileName) {
+void ReadBinFile( char QWE[4][16], const char* fileName) {
     ifstream Pew("binary.dat", ios::in | ios::binary);
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 16; j++)
         {
-            Pew.read((char*)&QWE[i][j], sizeof(unsigned short));
+            Pew.read((char*)&QWE[i][j], sizeof(char));
         }
     }
     Pew.close();
@@ -116,10 +117,10 @@ void task1() {
 }
 void task2()
 { 
-    unsigned char Text[4][16];
+    char Text[4][16];
     unsigned short Res[4][16];
     unsigned short i, j, z, x, c, sf, ez;
-    ConsoleInputText(Text[4][16], "Textinputtask.txt");
+    ConsoleInputText(Text, "Writetask2.bin");
     for (i = 0; i < 4; i++)
     {
         for (j = 0; j < 16; j++)
@@ -161,37 +162,31 @@ void task2()
 }
 
 void task3() {
-    unsigned short c, a, b, an, bn;
-    cout << "Enter A:";
-    cin >> a;//Введення з консолі
-    WriteArrayTextFileFor1and3Task(a, "firstnumberfor3task.txt");
-    cout << "Enter B :";
-    cin >> b;//Введення з консолі
-    WriteArrayTextFileFor1and3Task(b, "secondnumberfor3task.txt");
-    bn = b;//Значення bn дорівнює b,щоб працювати в циклі з ним
-    an = 0;//Ініціалізуємо перемінну
-    while (bn >= 1) {//Поки "bn" більше або дорівнює 1,то виконується наступна дія
-        if (bn == 1) {//Перевіряє, чи "bn" дорівнює 1
-            an += a;//Якщо так, то програма додає значення "a" до "an" 
-            bn--; //зменшує "bn" на 1
+    unsigned short a, b, result = 0;
+    cout << "Введiть перше значення: ";
+    cin >> a;
+    cout << "Введiть друге значення: ";
+    cin >> b;
+    while (b != 0) {
+        if (b & 1) {
+            result += a;
         }
-        else {
-            an += a << 1;//Якщо "bn" не дорівнює 1, то програма додає "a", зсунуте на 1 біт вліво (тобто помножене на 2), до "an"
-            bn -= 2;//зменшує "bn" на 2.
-        }
+        a <<= 1;
+        b >>= 1;
     }
-    c = a * b;//Щоб перевірити чи верхня частина коду вірна.
-    cout << "Результат : " << an << endl;//Результат множення двох беззнакових чисел 
-    WriteArrayTextFileFor1and3Task(an, "answerfor3task.txt");
-    cout << "Перевiрка : " << c;//Перевірка
-    WriteArrayTextFileFor1and3Task(c, "answerfor3taskwithoutbit.txt");
+    if (result == 0) {
+        cout << "Якесь число,що множиться,дорiвнює нулю ";
+    }
+    else if (result > 0) {
+        cout << " A * B = " << result << endl;
+    }
     return;
 }
 
 void task4() {
     int i, j;
-    unsigned char ZXC[4][16];
-    unsigned short q, w, e, ASCII;
+     char ZXC[4][16];
+    unsigned short q=0, w=0, e, ASCII;
     ReadBinFile(ZXC, "Writetask2.bin");
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 16; j++) {
